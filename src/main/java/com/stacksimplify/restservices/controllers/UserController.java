@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,18 +31,19 @@ import com.stacksimplify.restservices.services.UserService;
 //Controller
 @RestController
 @Validated
+@RequestMapping(value="/users")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/users")
+	@GetMapping
 	public List<User> getAllUsers(){
 		return userService.getAllUsers();
 	}
 	
 	//create user
-	@PostMapping("/users")
+	@PostMapping
 	public ResponseEntity<Void> createUser(@Valid @RequestBody User user, UriComponentsBuilder builder) {
 		try {
 			userService.createUser(user);
@@ -54,7 +56,7 @@ public class UserController {
 	}
 	
 	//getUserById
-	@GetMapping("/users/{id}")
+	@GetMapping("/{id}")
 	public Optional<User> getUserById(@PathVariable("id") @Min(1) Long id) {
 		try {
 			return userService.getUserById(id);
@@ -64,7 +66,7 @@ public class UserController {
 	}
 	
 	//updateUserbyId
-	@PutMapping("/users/{id}")
+	@PutMapping("/{id}")
 	public User updateUserById(@PathVariable("id") Long id, @RequestBody User user) {
 		try {
 			return userService.updateUserById(id, user);
@@ -74,12 +76,12 @@ public class UserController {
 		
 	}
 	
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteUserById(@PathVariable("id") Long id) {
 		userService.deleteUserById(id);
 	}
 	
-	@GetMapping("/users/byusername/{username}")
+	@GetMapping("/byusername/{username}")
 	public User getUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException  {
 		User user=userService.findByUsername(username);
 		if (user==null)throw new UserNameNotFoundException("User name not found in repository " + username);
