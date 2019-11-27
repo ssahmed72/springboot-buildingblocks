@@ -1,28 +1,20 @@
-package com.stacksimplify.restservices.entities;
+package com.stacksimplify.restservices.dtos;
 
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonView;
+import com.stacksimplify.restservices.entities.Order;
+import com.stacksimplify.restservices.entities.Views;
 
+public class UserDtoV2 {
 
-//Entity
-@Entity
-@Table(name="user")
-//@JsonIgnoreProperties({"firstname","lastname"})
-//@JsonFilter(value = "userFilter") - mapping jackson filter
-
-public class User extends RepresentationModel{
 	@Id
 	@GeneratedValue
 	@JsonView(Views.External.class)
@@ -55,35 +47,20 @@ public class User extends RepresentationModel{
 	@JsonView(Views.Internal.class)
 	private String role;
 	
-	@OneToMany(mappedBy="user")
-	private List<Order> orders; 
-
-	@JsonView(Views.Internal.class)
-	public List<Order> getOrders() {
-		return orders;
-	}
-
 	@Column(name="ADDRESS", length=100, nullable=true)
 	private String address;
 	
+	@OneToMany(mappedBy="user")
+	private List<Order> orders; 
 
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
 
-	public String getAddress() {
-		return address;
-	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+	public UserDtoV2() {
 
-	//No Argument Constructor
-	public User() {
 	}
 	
-	public User(Long id, @NotEmpty(message = "Username is a mandatory field. please provide values") String username,
+	public UserDtoV2(Long id,
+			@NotEmpty(message = "Username is a mandatory field. please provide values") String username,
 			@Size(min = 2, message = "First name should be atleast 2 characters") String firstname, String lastname,
 			String email, String ssn, String role, List<Order> orders, String address) {
 		super();
@@ -97,20 +74,6 @@ public class User extends RepresentationModel{
 		this.orders = orders;
 		this.address = address;
 	}
-
-	//Fields Constructor
-	public User(Long id, String username, String firstname, String lastname, String email, String ssn, String role) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.ssn = ssn;
-		this.role = role;
-	}
-	
-	//Getters and Setters
 
 	public Long getId() {
 		return id;
@@ -167,15 +130,22 @@ public class User extends RepresentationModel{
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	//ToString
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", ssn=" + ssn + ", role=" + role + ", orders=" + orders + ", address=" + address
-				+ "]";
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
-
+	
 }
